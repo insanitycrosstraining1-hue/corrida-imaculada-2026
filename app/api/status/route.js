@@ -1,0 +1,2 @@
+import {db,json} from '../../../lib/server';
+export async function GET(req){const id=new URL(req.url).searchParams.get('id');if(!/^[a-f\d-]{36}$/i.test(id||''))return json({erro:'ID inválido'},400);const {data,error}=await db().from('inscricoes').select('id,status,kit,valor,modalidade').eq('id',id).maybeSingle();if(error)return json({erro:'Erro de consulta'},500);return data?json(data):json({erro:'Inscrição não encontrada'},404)}

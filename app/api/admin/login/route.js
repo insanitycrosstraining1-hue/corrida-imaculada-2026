@@ -1,0 +1,2 @@
+import {json,sign,equal} from '../../../../lib/server';
+export async function POST(req){const {senha}=await req.json();if(!process.env.ADMIN_PASSWORD||!process.env.SESSION_SECRET||!equal(senha||'',process.env.ADMIN_PASSWORD))return json({erro:'Senha incorreta'},401);const r=json({ok:true});r.headers.append('Set-Cookie',`admin_session=${sign('imaculada-admin-v1')}; HttpOnly; Secure; SameSite=Strict; Path=/; Max-Age=28800`);return r}
