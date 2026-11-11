@@ -1,0 +1,22 @@
+CORRIDA DA IMACULADA - VERSÃO COM DIAGNÓSTICO
+
+O erro 'supabaseKey is required' não pode ser resolvido por código se a chave
+não estiver presente no ambiente do deployment. Esta versão:
+- identifica de forma clara a falta da chave nos logs;
+- remove /rest/v1/ da URL por meio de URL.origin;
+- preserva inscrições, PIX, upload e painel;
+- não inclui nenhuma chave secreta.
+
+PUBLICAÇÃO:
+1. Substitua os arquivos do repositório GitHub pelos deste ZIP, mantendo a estrutura.
+2. No projeto Vercel correto, Settings > Environment Variables:
+   SUPABASE_URL = https://mnirdzzddhuaudrzvnwr.supabase.co
+   SUPABASE_SERVICE_ROLE_KEY = valor secreto 'service_role' do Supabase
+   ADMIN_PASSWORD e SESSION_SECRET = seus valores privados
+   Marque Production.
+3. Faça deploy de Production após salvar.
+4. Teste inscrição e veja Runtime Logs.
+
+Se aparecer CONFIG_SUPABASE_KEY_AUSENTE, o deployment NÃO recebeu a variável:
+é preciso corrigir o escopo/acesso da Vercel, não o código.
+NUNCA compartilhe nem publique a chave service_role.

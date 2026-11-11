@@ -10,5 +10,9 @@ export async function POST(req){
   const {data,error}=await db().from('inscricoes').insert({nome,email,telefone,nascimento,cidade,modalidade,kit,tamanho,valor}).select('id').single();
   if(error)throw error;
   return json({id:data.id,valor,status:'pendente'});
- }catch(e){console.error('inscricao',e);return json({erro:'Erro ao processar inscrição.'},500)}
+ }catch(e){console.error('inscricao',e);
+  if(String(e?.message||'').startsWith('CONFIG_SUPABASE_')){
+    return json({erro:'Configuração do servidor incompleta. Avise a organização.',codigo:e.message.split(':')[0]},503);
+  }
+  return json({erro:'Erro ao processar inscrição.'},500)}
 }
