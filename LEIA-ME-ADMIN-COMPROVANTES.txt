@@ -1,0 +1,11 @@
+ATUALIZAÇÃO: ANEXAR COMPROVANTE PELO PAINEL ADMINISTRATIVO
+
+1. Substitua os arquivos do GitHub pelo conteúdo deste ZIP, mantendo as pastas.
+2. Aguarde a Vercel publicar a branch main com status Ready.
+3. Acesse /admin, faça login, localize a inscrição e clique em "Anexar comprovante".
+4. Escolha JPG, PNG, WEBP ou PDF de até 5 MB. Depois, "Ver arquivo" abre o comprovante.
+
+O anexo fica no bucket privado "comprovantes" do Supabase e no cadastro original.
+O status passa a confirmado_comprovante, mas NÃO a pago. Confira o PIX no banco antes de marcar pago.
+Não são necessárias novas variáveis de ambiente nem alterações SQL.
+O botão não aparece quando já existe comprovante ou quando a inscrição está paga/cancelada.
