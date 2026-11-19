@@ -1,4 +1,3 @@
-import {notificarComprovante} from '../../../lib/email';
 import {db,json} from '../../../lib/server';
 export const runtime='nodejs';
 export async function POST(req){
@@ -18,7 +17,7 @@ export async function POST(req){
   if(uploadError){console.error(uploadError);return json({erro:'Falha ao salvar comprovante.'},500)}
   const {data:updated,error:updateError}=await database.from('inscricoes').update({comprovante_path:path,comprovante_enviado_em:new Date().toISOString(),status:'confirmado_comprovante'}).eq('id',id).is('comprovante_path',null).in('status',['pendente','em_analise','rejeitado']).select('id').maybeSingle();
   if(updateError||!updated){await database.storage.from('comprovantes').remove([path]);return json({erro:'Não foi possível vincular o comprovante. Atualize a página e tente novamente.'},409)}
-  let emailEnviado=false;try{emailEnviado=await notificarComprovante(row)}catch(err){console.error('email_comprovante',err)}
-  return json({ok:true,status:'confirmado_comprovante',emailEnviado});
+  
+  return json({ok:true,status:'confirmado_comprovante',});
  }catch(e){console.error('comprovante',e);return json({erro:'Erro no envio.'},500)}
 }

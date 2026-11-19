@@ -1,0 +1,9 @@
+VERSÃO SEM RESEND — CONFIRMAÇÃO PELO SITE E WHATSAPP
+1. Substitua os arquivos no GitHub (mesma estrutura de pastas).
+2. Aguarde o deployment Production Ready na Vercel.
+3. Teste /consulta e a opção de compartilhar pelo WhatsApp.
+4. O participante recebe confirmação na TELA ao enviar comprovante; não há envio automático de mensagem pelo WhatsApp. O botão abre WhatsApp com mensagem pronta para compartilhamento.
+5. A consulta exige o número UUID da inscrição. Não divulgue números de inscrição de outras pessoas.
+6. Não é necessário RESEND_API_KEY ou EMAIL_FROM.
+7. A regra de e-mail único continua dependendo da execução da migração SQL já incluída. Se ainda não executou, confira duplicatas antes de criar índice único.
+8. O PIX e o QR code antigo permanecem como estavam; confira destinatário antes de pagar.
