@@ -1,0 +1,24 @@
+ATUALIZAÇÃO: UMA INSCRIÇÃO POR E-MAIL + NOTIFICAÇÃO DE COMPROVANTE
+
+1. ANTES DE PUBLICAR, abra MIGRACAO-EMAIL-UNICO.sql no SQL Editor do Supabase.
+   Execute a consulta de duplicados PRIMEIRO. Se houver repetidos, revise manualmente;
+   NÃO apague inscrições automaticamente. Depois crie o índice UNIQUE.
+   Sem o índice, a garantia contra cadastros simultâneos não estará ativa.
+
+2. Publique os arquivos deste ZIP no GitHub (branch main) e aguarde Vercel Ready.
+
+3. Para enviar e-mails: crie conta no Resend (resend.com), verifique um domínio
+   que você controla e configure as variáveis na Vercel (Production):
+   RESEND_API_KEY (chave secreta), EMAIL_FROM (ex.: Inscricoes <inscricoes@seudominio.com>).
+   Faça Redeploy. Não inclua chaves no GitHub ou no chat.
+
+4. O e-mail é disparado quando o participante OU o administrador anexa um comprovante.
+   A mensagem diz COMPROVANTE RECEBIDO, não PAGAMENTO CONFIRMADO.
+   Falha no serviço de e-mail NÃO desfaz o comprovante anexado.
+   Sem domínio verificado/chave, o envio não funcionará (veja Runtime Logs).
+
+5. TESTE: tente cadastrar o mesmo e-mail novamente (deve bloquear), anexe um
+   comprovante de teste em inscrição válida e confira o recebimento do e-mail.
+
+ATENÇÃO: o bloqueio é por e-mail, não por CPF/pessoa. Uma família que usa um
+único e-mail ficará limitada a uma inscrição.

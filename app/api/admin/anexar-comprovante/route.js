@@ -1,3 +1,4 @@
+import {notificarComprovante} from '../../../../lib/email';
 import {authorized,db,json} from '../../../../lib/server';
 import {randomUUID} from 'node:crypto';
 export const runtime='nodejs';
@@ -16,7 +17,7 @@ export async function POST(req){
   const signatureOk=ext==='pdf'?bytes.subarray(0,5).toString()==='%PDF-':ext==='png'?bytes.subarray(0,8).equals(Buffer.from([137,80,78,71,13,10,26,10])):ext==='jpg'?bytes[0]===255&&bytes[1]===216&&bytes[2]===255:bytes.subarray(0,4).toString()==='RIFF'&&bytes.subarray(8,12).toString()==='WEBP';
   if(!signatureOk)return json({erro:'O conteúdo do arquivo não corresponde ao formato informado.'},400);
   const database=db();
-  const {data:row,error:lookupError}=await database.from('inscricoes').select('id,status,comprovante_path').eq('id',id).maybeSingle();
+  const {data:row,error:lookupError}=await database.from('inscricoes').select('id,status,comprovante_path,nome,email,modalidade,kit').eq('id',id).maybeSingle();
   if(lookupError)throw lookupError;
   if(!row)return json({erro:'Inscrição não encontrada.'},404);
   if(row.comprovante_path)return json({erro:'Esta inscrição já possui comprovante. Atualize a lista.'},409);
@@ -26,6 +27,7 @@ export async function POST(req){
   if(uploadError)throw uploadError;
   const {data:updated,error:updateError}=await database.from('inscricoes').update({comprovante_path:path,comprovante_enviado_em:new Date().toISOString(),status:'confirmado_comprovante'}).eq('id',id).is('comprovante_path',null).in('status',['pendente','em_analise','rejeitado','confirmado_comprovante']).select('id').maybeSingle();
   if(updateError||!updated){await database.storage.from('comprovantes').remove([path]);return json({erro:'Não foi possível vincular o comprovante. Atualize a lista e tente novamente.'},409)}
-  return json({ok:true,status:'confirmado_comprovante'});
+  let emailEnviado=false;try{emailEnviado=await notificarComprovante(row)}catch(err){console.error('email_comprovante',err)}
+  return json({ok:true,status:'confirmado_comprovante',emailEnviado});
  }catch(e){console.error('admin_anexar_comprovante',e);return json({erro:'Falha ao anexar o comprovante. Verifique os logs.'},500)}
 }

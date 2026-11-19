@@ -8,7 +8,7 @@ export async function POST(req){
   if(nome.length<3||!/^\S+@\S+\.\S+$/.test(email)||telefone.length<10||telefone.length>13||cidade.length<2||!['Corrida','Caminhada'].includes(modalidade)||!['essencial','completo'].includes(kit)||!/^\d{4}-\d{2}-\d{2}$/.test(nascimento)||nascimento>new Date().toISOString().slice(0,10)||(kit==='completo'&&!['PP','P','M','G','GG','XG'].includes(tamanho))||x.aceite!==true)return json({erro:'Confira os dados obrigatórios.'},400);
   const valor=kit==='completo'?80:50;
   const {data,error}=await db().from('inscricoes').insert({nome,email,telefone,nascimento,cidade,modalidade,kit,tamanho,valor}).select('id').single();
-  if(error)throw error;
+  if(error){if(error.code==='23505')return json({erro:'Este e-mail já possui uma inscrição. Utilize a inscrição existente ou fale com a organização.'},409);throw error;}
   return json({id:data.id,valor,status:'pendente'});
  }catch(e){console.error('inscricao',e);
   if(String(e?.message||'').startsWith('CONFIG_SUPABASE_')){
